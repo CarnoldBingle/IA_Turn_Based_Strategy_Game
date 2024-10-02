@@ -368,3 +368,16 @@ process
 END"""
 
 
+import tkinter as tk
+
+
+root = tk.Tk()
+
+root.title()
+root.geometry("1000x600")
+root.resizable(False, False)
+root.config(bg="green")
+
+
+
+root.mainloop()
