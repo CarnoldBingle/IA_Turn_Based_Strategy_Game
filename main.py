@@ -2,6 +2,12 @@
 
 import tkinter as tk
 
+def second_window():
+    root.destroy()
+
+second_window = tk.Tk()
+second_window.title("Start")
+second_window.geometry("1000x600")
 
 root = tk.Tk()
 
@@ -64,5 +70,8 @@ canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
 canvas.place(x=450, y=300)
 oval = canvas.create_oval(10, 10, 90, 40, fill="Purple", outline="black")
 canvas.create_text(50, 25, text="CDM", font=("Arial", 12, "bold"))
+
+start_button = tk.Button(root, text="Start", command=second_window, font=("Arial", 12))
+start_button.place(x=900, y=550)
 
 root.mainloop()
