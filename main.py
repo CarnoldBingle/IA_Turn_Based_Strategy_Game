@@ -1,4 +1,6 @@
 import tkinter as tk
+from tkinter import messagebox
+
 root = tk.Tk()
 
 root.title("Main Window")
@@ -24,6 +26,9 @@ active_team = {
 
 # New formations to choose from
 formations_list = ["4-3-3", "4-4-2", "3-5-2", "5-3-2", "3-4-3"]
+current_formation = "4-3-3"
+
+formations_window_instance = None
 
 def open_start_window():
     global start_window_instance
@@ -53,6 +58,8 @@ def open_transfer_window():
         label.pack(pady=50)
         transfer_window_instance.grab_set()
         transfer_window_instance.protocol("WM_DELETE_WINDOW", on_closing_transfer_window)
+
+
 
 def on_closing_transfer_window():
     global transfer_window_instance
@@ -93,106 +100,75 @@ def on_closing_stats_window():
     stats_window_instance.destroy()
     stats_window_instance = None
 
+
 def open_formations_window():
     global formations_window_instance
     if formations_window_instance is None or not formations_window_instance.winfo_exists():
         formations_window_instance = tk.Toplevel(root)
         formations_window_instance.title("Formations")
-        formations_window_instance. geometry("1000x600")
-        formations_window_instance.resizable(False,False)
+        formations_window_instance.geometry("1000x600")
+        formations_window_instance.resizable(False, False)
         formations_window_instance.config(bg="green")
-        display_formation(formations_window_instance)
-        formations_window_instance.grab_set()
-        formations_window_instance.protocol("WM_DELETE_WINDOW", on_closing_window())
 
-def display_formation(window):
-    """Display the active team formation as ovals and labels."""
-    positions = {
-        "ST": (450, 50, "red"),
-        "LW": (275, 100, "red"),
-        "RW": (625, 100, "red"),
-        "CM": [(350, 225), (450, 300), (550, 225)],
-        "CB": [(350, 425), (550, 425)],
-        "GK": (450, 525, "yellow")
-    }
+def form1():
+    # Buttons to open different windows, including formations
+    formations_button = tk.Button(root, text="Formations", command=open_formations_window, font=("Arial", 12))
+    formations_button.place(x=50, y=500)
 
-    # Display single-position players (like ST, LW, RW, GK)
-    for pos, (x, y, color) in positions.items():
-        if pos != "CM" and pos != "CB":
-            draw_player(window, x, y, color, pos, active_team[pos])
+    canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
+    canvas.place(x=450, y=50)
+    canvas.create_oval(10, 10, 90, 40, fill="red", outline="black")
+    canvas.create_text(50, 25, text="ST", font=("Arial", 12, "bold"))
 
-    # Display multiple-position players (like CM, CB)
-    for pos, coords in [("CM", positions["CM"]), ("CB", positions["CB"])]:
-        for i, (x, y) in enumerate(coords):
-            draw_player(window, x, y, "blue" if pos == "CB" else "purple", pos, active_team[pos][i])
+    canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
+    canvas.place(x=275, y=100)
+    canvas.create_oval(10, 10, 90, 40, fill="red", outline="black")
+    canvas.create_text(50, 25, text="LW", font=("Arial", 12, "bold"))
 
-def draw_player(window, x, y, color, position, player_name):
-    """Draws an oval with a player's name and position."""
-    canvas = tk.Canvas(window, width=100, height=50, bg="green", highlightthickness=0)
-    canvas.place(x=x, y=y)
-    canvas.create_oval(10, 10, 90, 40, fill=color, outline="black")
-    canvas.create_text(50, 15, text=position, font=("Arial", 12, "bold"))
-    canvas.create_text(50, 35, text=player_name, font=("Arial", 10))
+    canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
+    canvas.place(x=625, y=100)
+    canvas.create_oval(10, 10, 90, 40, fill="red", outline="black")
+    canvas.create_text(50, 25, text="RW", font=("Arial", 12, "bold"))
 
-def on_closing_formations_window():
-    global formations_window_instance
-    formations_window_instance.destroy()
-    formations_window_instance = None
+    canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
+    canvas.place(x=450, y=525)
+    canvas.create_oval(10, 10, 90, 40, fill="yellow", outline="black")
+    canvas.create_text(50, 25, text="GK", font=("Arial", 12, "bold"))
 
-canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
-canvas.place(x=450, y=50)
-canvas.create_oval(10, 10, 90, 40, fill="red", outline="black")
-canvas.create_text(50, 25, text="ST", font=("Arial", 12, "bold"))
+    canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
+    canvas.place(x=550, y=425)
+    canvas.create_oval(10, 10, 90, 40, fill="blue", outline="black")
+    canvas.create_text(50, 25, text="CB", font=("Arial", 12, "bold"))
 
-canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
-canvas.place(x=275, y=100)
-canvas.create_oval(10, 10, 90, 40, fill="red", outline="black")
-canvas.create_text(50, 25, text="LW", font=("Arial", 12, "bold"))
+    canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
+    canvas.place(x=350, y=425)
+    canvas.create_oval(10, 10, 90, 40, fill="blue", outline="black")
+    canvas.create_text(50, 25, text="CB", font=("Arial", 12, "bold"))
 
-canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
-canvas.place(x=625, y=100)
-canvas.create_oval(10, 10, 90, 40, fill="red", outline="black")
-canvas.create_text(50, 25, text="RW", font=("Arial", 12, "bold"))
+    canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
+    canvas.place(x=250, y=375)
+    canvas.create_oval(10, 10, 90, 40, fill="blue", outline="black")
+    canvas.create_text(50, 25, text="LB", font=("Arial", 12, "bold"))
 
-canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
-canvas.place(x=450, y=525)
-canvas.create_oval(10, 10, 90, 40, fill="yellow", outline="black")
-canvas.create_text(50, 25, text="GK", font=("Arial", 12, "bold"))
+    canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
+    canvas.place(x=650, y=375)
+    canvas.create_oval(10, 10, 90, 40, fill="blue", outline="black")
+    canvas.create_text(50, 25, text="RB", font=("Arial", 12, "bold"))
 
-canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
-canvas.place(x=550, y=425)
-canvas.create_oval(10, 10, 90, 40, fill="blue", outline="black")
-canvas.create_text(50, 25, text="CB", font=("Arial", 12, "bold"))
+    canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
+    canvas.place(x=350, y=225)
+    canvas.create_oval(10, 10, 90, 40, fill="purple", outline="black")
+    canvas.create_text(50, 25, text="CM", font=("Arial", 12, "bold"))
 
-canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
-canvas.place(x=350, y=425)
-canvas.create_oval(10, 10, 90, 40, fill="blue", outline="black")
-canvas.create_text(50, 25, text="CB", font=("Arial", 12, "bold"))
+    canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
+    canvas.place(x=550, y=225)
+    canvas.create_oval(10, 10, 90, 40, fill="purple", outline="black")
+    canvas.create_text(50, 25, text="CM", font=("Arial", 12, "bold"))
 
-canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
-canvas.place(x=250, y=375)
-canvas.create_oval(10, 10, 90, 40, fill="blue", outline="black")
-canvas.create_text(50, 25, text="LB", font=("Arial", 12, "bold"))
-
-canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
-canvas.place(x=650, y=375)
-canvas.create_oval(10, 10, 90, 40, fill="blue", outline="black")
-canvas.create_text(50, 25, text="RB", font=("Arial", 12, "bold"))
-
-canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
-canvas.place(x=350, y=225)
-canvas.create_oval(10, 10, 90, 40, fill="purple", outline="black")
-canvas.create_text(50, 25, text="CM", font=("Arial", 12, "bold"))
-
-canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
-canvas.place(x=550, y=225)
-canvas.create_oval(10, 10, 90, 40, fill="purple", outline="black")
-canvas.create_text(50, 25, text="CM", font=("Arial", 12, "bold"))
-
-canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
-canvas.place(x=450, y=300)
-canvas.create_oval(10, 10, 90, 40, fill="purple", outline="black")
-canvas.create_text(50, 25, text="CDM", font=("Arial", 12, "bold"))
+    canvas = tk.Canvas(root, width=100, height=50, bg="green", highlightthickness=0)
+    canvas.place(x=450, y=300)
+    canvas.create_oval(10, 10, 90, 40, fill="purple", outline="black")
+    canvas.create_text(50, 25, text="CDM", font=("Arial", 12, "bold"))
 
 start_button = tk.Button(root, text="Start", command=open_start_window, font=("Arial", 12))
 start_button.place(x=900, y=550)
@@ -208,5 +184,7 @@ stats_button.place(x=50, y=350)
 
 formations_button = tk.Button(root, text="Formations", command=open_formations_window, font=("Arial", 12))
 formations_button.place(x=50, y=500)
+
+form1()
 
 root.mainloop()
