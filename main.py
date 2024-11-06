@@ -1,4 +1,6 @@
 import tkinter as tk
+import csv
+
 from tkinter import messagebox
 
 root = tk.Tk()
@@ -83,6 +85,36 @@ def on_closing_training_window():
     training_plan_window_instance.destroy()
     training_plan_window_instance = None
 
+
+# data_loader.py
+
+def load_players_from_csv():
+    players = []
+    with open("player.csv", mode='r') as file:
+        # Read the header (first line) to get column names
+        headers = file.readline().strip().split(',')
+
+        # Read each subsequent line as a player entry
+        for line in file:
+            values = line.strip().split(',')
+            player = {headers[i]: values[i] for i in range(len(headers))}
+            players.append(player)
+
+    return players
+
+# main.py
+
+
+# Load players data from CSV file
+players = load_players_from_csv()
+
+# Example to display player data in the console
+for player in players:
+    print(f"Name: {player['Name']}, Position: {player['Position']}, Goals: {player['Goals']}")
+
+
+
+
 def open_stats_window():
     global stats_window_instance
     if stats_window_instance is None or not stats_window_instance.winfo_exists():
@@ -90,10 +122,49 @@ def open_stats_window():
         stats_window_instance.title("Stats")
         stats_window_instance.geometry("1000x600")
         stats_window_instance.resizable(False, False)
-        label = tk.Label(stats_window_instance, text="Stats Window", font = ("Arial, 16"))
-        label.pack(pady=50)
-        stats_window_instance.grab_set()
-        stats_window_instance.protocol("WM_DELETE_WINDOW", on_closing_window())
+        stats_window_instance.config(bg="green")
+
+        frame = tk.Frame(stats_window_instance)
+        frame.pack(pady=20, padx=20, fill=tk.BOTH, expand=True)
+
+        # Dropdown menu for filtering by position
+        selected_position = tk.StringVar(value="All")  # Default to "All" to show all players initially
+        positions = ["All"] + list(set(player["Position"] for player in players))  # Unique positions from CSV
+        dropdown = tk.OptionMenu(frame, selected_position, *positions)
+        dropdown.config(width=10, font=("Arial", 12))
+        dropdown.pack(side=tk.TOP, pady=10)
+
+        # Text box for displaying player stats
+        text_box = tk.Text(frame, wrap=tk.WORD, font=("Arial", 12), width=60, height=20, bg="green", fg="black")
+
+        text_box.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        # Scrollbar for the text box
+        scrollbar = tk.Scrollbar(frame, command=text_box.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        text_box.config(yscrollcommand=scrollbar.set)
+
+        # Function to filter and display players based on the selected position
+        def filter_players():
+            # Clear the text box
+            text_box.delete("1.0", tk.END)
+            # Get the selected position
+            position = selected_position.get()
+            # Filter players based on position
+            filtered_players = [player for player in players if player["Position"] == position or position == "All"]
+            # Display filtered players in the text box
+            for player in filtered_players:
+                text_box.insert(tk.END, f"Name: {player['Name']}, Position: {player['Position']}, "
+                                        f"Goals: {player['Goals']}, Assists: {player['Assists']}, "
+                                        f"Appearances: {player['Appearances']}\n\n")
+
+        # Update display when a new position is selected
+        selected_position.trace("w", lambda *args: filter_players())
+
+        # Initial display of all players
+        filter_players()
+
+
 
 def on_closing_stats_window():
     global stats_window_instance
@@ -109,6 +180,13 @@ def open_formations_window():
         formations_window_instance.geometry("1000x600")
         formations_window_instance.resizable(False, False)
         formations_window_instance.config(bg="green")
+        formations_window_instance.grab_set()
+        formations_window_instance.protocol("WM_DELETE_WINDOW", on_closing_formations_window)
+
+def on_closing_formations_window():
+    global formations_window_instance
+    formations_window_instance.destroy()
+    formations_window_instance = None
 
 def form1():
     # Buttons to open different windows, including formations
