@@ -123,6 +123,8 @@ def open_stats_window():
         stats_window_instance.geometry("1000x600")
         stats_window_instance.resizable(False, False)
         stats_window_instance.config(bg="green")
+        stats_window_instance.grab_set()
+        stats_window_instance.protocol("WM_DELETE_WINDOW", on_closing_stats_window)
 
         frame = tk.Frame(stats_window_instance)
         frame.pack(pady=20, padx=20, fill=tk.BOTH, expand=True)
@@ -171,6 +173,7 @@ def on_closing_stats_window():
     stats_window_instance.destroy()
     stats_window_instance = None
 
+active_formation = "form1"  # Default active formation
 
 def open_formations_window():
     global formations_window_instance
@@ -182,6 +185,38 @@ def open_formations_window():
         formations_window_instance.config(bg="green")
         formations_window_instance.grab_set()
         formations_window_instance.protocol("WM_DELETE_WINDOW", on_closing_formations_window)
+
+        # Create a canvas to draw the formation
+        canvas = tk.Canvas(formations_window_instance, width=800, height=500, bg="green")
+        canvas.pack(pady=20)
+
+        # Draw the current formation on the canvas
+        current_formation(canvas)
+
+        # Create a frame inside formations window for formation buttons
+        button_frame = tk.Frame(formations_window_instance)
+        button_frame.pack(pady=10)
+
+        button_form1 = tk.Button(button_frame, text="4-3-3", command=lambda: set_formation(form1, canvas))
+        button_form1.grid(row=0, column=0)
+
+        button_form2 = tk.Button(button_frame, text="4-2-3-1", command=lambda: set_formation(form2, canvas))
+        button_form2.grid(row=0, column=1)
+
+        button_form3 = tk.Button(button_frame, text="4-3-3", command=lambda: set_formation(form3, canvas))
+        button_form3.grid(row=0, column=2)
+
+        button_form4 = tk.Button(button_frame, text="4-4-2", command=lambda: set_formation(form4, canvas))
+        button_form4.grid(row=0, column=3)
+
+
+
+
+def set_formation(formation_func, canvas):
+    global current_formation
+    current_formation = formation_func
+    current_formation(canvas)  # Redraw the selected formation on the canvas
+
 
 def on_closing_formations_window():
     global formations_window_instance
@@ -465,6 +500,6 @@ stats_button.place(x=50, y=350)
 formations_button = tk.Button(root, text="Formations", command=open_formations_window, font=("Arial", 12))
 formations_button.place(x=50, y=500)
 
-form4()
+form1()
 
 root.mainloop()
