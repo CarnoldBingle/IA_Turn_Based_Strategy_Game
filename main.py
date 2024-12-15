@@ -1,4 +1,5 @@
 import tkinter as tk
+from PIL import Image, ImageTk
 import csv
 
 from tkinter import messagebox
@@ -9,6 +10,17 @@ root.title("Main Window")
 root.geometry("1000x600")
 root.resizable(False, False)
 root.config(bg="green")
+
+#this is the main win pic
+#this needs to change when the form are selected
+image = Image.open("form1.png")
+sized_image = image.resize((150,150))
+tk_image = ImageTk.PhotoImage(sized_image)
+image_lable = tk.Label(root, image = tk_image)
+image_lable.place(x=600, y=150)
+
+
+
 
 start_window_instance = None
 transfer_window_instance = None
@@ -32,6 +44,9 @@ current_formation = "4-3-3"
 
 formations_window_instance = None
 
+
+
+# i will fix this
 def open_start_window():
     global start_window_instance
     if start_window_instance is None or not start_window_instance.winfo_exists():
@@ -40,7 +55,15 @@ def open_start_window():
         start_window_instance.geometry("1000x600")
         start_window_instance.resizable(False, False)
         label = tk.Label(start_window_instance, text="Start Window", font=("Arial", 16))
-        label.pack(pady=50)
+        #label.pack(pady=50)
+
+        image = Image.open("form1.png")
+        sized_image = image.resize((150, 150))
+        tk_image = ImageTk.PhotoImage(sized_image)
+        image_lable = tk.Label(  start_window_instance, image=tk_image)
+        image_lable.place(x=600, y=150)
+
+
         start_window_instance.grab_set()
         start_window_instance.protocol("WM_DELETE_WINDOW", on_closing_window)
 
@@ -58,6 +81,11 @@ def open_transfer_window():
         transfer_window_instance.resizable(False, False)
         label = tk.Label(transfer_window_instance, text="Transfer Window", font=("Arial", 16))
         label.pack(pady=50)
+
+        #move players to differnt teams here
+        #Create a user team and a filter system for seperate teams. (two drop down menus. menus two gets filtered to be the other teams)
+
+
         transfer_window_instance.grab_set()
         transfer_window_instance.protocol("WM_DELETE_WINDOW", on_closing_transfer_window)
 
@@ -187,7 +215,7 @@ def open_formations_window():
         formations_window_instance.protocol("WM_DELETE_WINDOW", on_closing_formations_window)
 
         # Create a canvas to draw the formation and limit its height, with temporary bg color for debugging
-        canvas = tk.Canvas(formations_window_instance, width=800, height=300, bg="lightblue")
+        canvas = tk.Canvas(formations_window_instance, width=800, height=500, bg="lightblue")
         canvas.pack(pady=(20, 10))  # Add padding to ensure space for the button frame
 
         # Display the default formation on the canvas
@@ -371,12 +399,6 @@ def on_closing_formations_window():
 
 
 
-
-
-
-
-
-
 start_button = tk.Button(root, text="Start", command=open_start_window, font=("Arial", 12))
 start_button.place(x=900, y=550)
 
@@ -393,4 +415,8 @@ formations_button = tk.Button(root, text="Formations", command=open_formations_w
 formations_button.place(x=50, y=500)
 
 
+#select a form
+# show the form in start win/ main win
+
 root.mainloop()
+
