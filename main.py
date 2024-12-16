@@ -72,6 +72,16 @@ def on_closing_window():
     start_window_instance.destroy()
     start_window_instance = None
 
+# Example dataset of players and teams
+players_data = [
+    {"Name": "Player 1", "Team": "Red Wolves"},
+    {"Name": "Player 2", "Team": "Red Wolves"},
+    {"Name": "Player 3", "Team": "Blue Tigers"},
+    {"Name": "Player 4", "Team": "Golden Eagles"},
+    {"Name": "Player 5", "Team": "Blue Tigers"},
+    {"Name": "Player 6", "Team": "Black Panthers"},
+]
+
 def open_transfer_window():
     global transfer_window_instance
     if transfer_window_instance is None or not transfer_window_instance.winfo_exists():  # Check if the window exists
@@ -79,15 +89,68 @@ def open_transfer_window():
         transfer_window_instance.title("Transfer")
         transfer_window_instance.geometry("1000x600")
         transfer_window_instance.resizable(False, False)
-        label = tk.Label(transfer_window_instance, text="Transfer Window", font=("Arial", 16))
-        label.pack(pady=50)#
+        transfer_window_instance.config(bg="green")
 
-        #move players to differnt teams here
-        #Create a user team and a filter system for seperate teams. (two drop down menus. menus two gets filtered to be the other teams)
+        # Frame to organize dropdowns and text display
+        frame = tk.Frame(transfer_window_instance, bg="green")
+        frame.pack(pady=20)
 
+        # Dropdown 1: Your team
+        your_team_label = tk.Label(frame, text="Your Team", bg="green", fg="white", font=("Arial", 12))
+        your_team_label.grid(row=0, column=0, padx=10, pady=5)
+
+        your_team_dropdown = tk.StringVar()
+        your_team_dropdown.set("Red Wolves")  # Default selection
+
+        your_team_menu = tk.OptionMenu(frame, your_team_dropdown, "Red Wolves")
+        your_team_menu.config(font=("Arial", 10))
+        your_team_menu.grid(row=1, column=0, padx=10)
+
+        # Dropdown 2: Other teams
+        other_teams_label = tk.Label(frame, text="Other Teams", bg="green", fg="white", font=("Arial", 12))
+        other_teams_label.grid(row=0, column=1, padx=10, pady=5)
+
+        other_teams_dropdown = tk.StringVar()
+        other_teams_dropdown.set("Select a Team")  # Default selection
+
+        # List of other teams
+        teams = ["Blue Tigers", "Golden Eagles", "Silver Foxes", "Black Panthers"]
+        other_teams_menu = tk.OptionMenu(frame, other_teams_dropdown, *teams)
+        other_teams_menu.config(font=("Arial", 10))
+        other_teams_menu.grid(row=1, column=1, padx=10)
+
+        # Filter button
+        filter_button = tk.Button(frame, text="Filter", font=("Arial", 12),
+                                   command=lambda: filter_team_players(other_teams_dropdown.get(), text_box))
+        filter_button.grid(row=1, column=2, padx=10)
+
+        # Textbox for displaying players
+        text_box = tk.Text(transfer_window_instance, wrap=tk.WORD, font=("Arial", 12), width=60, height=20, bg="white", fg="black")
+        text_box.pack(pady=20)
+
+        # Function to filter and display players
+        def filter_team_players(selected_team, display_box):
+            display_box.delete("1.0", tk.END)  # Clear the text box first
+            if selected_team != "Select a Team":
+                filtered_players = [player["Name"] for player in players_data if player["Team"] == selected_team]
+                if filtered_players:
+                    for player in filtered_players:
+                        display_box.insert(tk.END, f"{player}\n")
+                else:
+                    display_box.insert(tk.END, "No players found for the selected team.\n")
+            else:
+                display_box.insert(tk.END, "Please select a team to filter players.\n")
 
         transfer_window_instance.grab_set()
         transfer_window_instance.protocol("WM_DELETE_WINDOW", on_closing_transfer_window)
+
+
+def on_closing_transfer_window():
+    global transfer_window_instance
+    transfer_window_instance.destroy()
+    transfer_window_instance = None
+
+
 
 
 
