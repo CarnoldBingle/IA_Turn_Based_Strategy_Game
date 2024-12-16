@@ -80,7 +80,7 @@ def open_transfer_window():
         transfer_window_instance.geometry("1000x600")
         transfer_window_instance.resizable(False, False)
         label = tk.Label(transfer_window_instance, text="Transfer Window", font=("Arial", 16))
-        label.pack(pady=50)
+        label.pack(pady=50)#
 
         #move players to differnt teams here
         #Create a user team and a filter system for seperate teams. (two drop down menus. menus two gets filtered to be the other teams)
