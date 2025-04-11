@@ -94,7 +94,7 @@ class TeamPlayerManager:
         self.player_listbox.delete(0, tk.END)  # Clear existing players
         if selected_team and selected_team != "Select Team":
             self.filtered_data = self.data[self.data["Team"] == selected_team]
-            for player in self.filtered_data["Player Name"]:
+            for player in self.filtered_data["Name"]:
                 self.player_listbox.insert(tk.END, player)
 
     def transfer_players(self):
@@ -113,7 +113,7 @@ class TeamPlayerManager:
         # Add players to the transferred list and update the DataFrame
         for player in selected_players:
             self.transferred_listbox.insert(tk.END, f"{player} → {new_team}")
-            self.data.loc[self.data["Player Name"] == player, "Team"] = new_team
+            self.data.loc[self.data["Name"] == player, "Team"] = new_team
 
         # Remove transferred players from the listbox
         for i in reversed(selected_indices):

@@ -14,10 +14,10 @@ root.config(bg="green")
 #this is the main win pic
 #this needs to change when the form are selected
 image = Image.open("form1.png")
-sized_image = image.resize((150,150))
+sized_image = image.resize((450,550))
 tk_image = ImageTk.PhotoImage(sized_image)
 image_lable = tk.Label(root, image = tk_image)
-image_lable.place(x=600, y=150)
+image_lable.place(x=300, y=25)
 
 
 
@@ -58,10 +58,10 @@ def open_start_window():
         #label.pack(pady=50)
 
         image = Image.open("form1.png")
-        sized_image = image.resize((150, 150))
+        sized_image = image.resize((50,50))
         tk_image = ImageTk.PhotoImage(sized_image)
         image_lable = tk.Label(  start_window_instance, image=tk_image)
-        image_lable.place(x=600, y=150)
+        image_lable.place(x=450, y=150)
 
 
         start_window_instance.grab_set()
@@ -287,7 +287,7 @@ def open_formations_window():
         #current_formation()
 
         # Create a frame for the buttons below the canvas, with a temporary color for debugging
-        button_frame = tk.Frame(formations_window_instance, bg="yellow")
+        button_frame = tk.Frame(formations_window_instance, bg="green")
         button_frame.pack(pady=10)  # Padding between the canvas and buttons
 
         # Buttons to select formations, visible with padding
@@ -307,9 +307,6 @@ formations_window_instance = None
 
 # Define each formation function to draw it on the canvas
 def form1(canvas):
-    # Clear canvas for new formation
-    canvas.delete("all")
-    # 4-3-3 Formation
     canvas.create_oval(400, 50, 450, 100, fill="red")
     canvas.create_text(425, 75, text="ST", font=("Arial", 12, "bold"))
 
